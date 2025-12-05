@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tennis Tracker MVP</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background:#f7f7f7; }
+    h1 { color: #2c3e50; }
+    .card {
+      background:white; padding:20px; border-radius:10px; 
+      margin-bottom:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, select, textarea {
+      width:100%; padding:10px; margin:10px 0;
+      border:1px solid #ccc; border-radius:5px;
+    }
+    button {
+      padding:10px 20px; background:#27ae60; color:white;
+      border:none; border-radius:5px; cursor:pointer;
+    }
+    button:hover { background:#219150; }
+  </style>
+</head>
+<body>
+
+  <h1>🎾 Tennis Progress Tracker</h1>
+
+  <!-- Formulaire -->
+  <div class="card">
+    <h2>Ajouter une session</h2>
+
+    <label>Date :</label>
+    <input type="date" id="date">
+
+    <label>Niveau de confiance (1 à 10) :</label>
+    <input type="number" id="confidence" min="1" max="10">
+
+    <label>Nombre de doubles fautes :</label>
+    <input type="number" id="doubleFaults" min="0">
+
+    <label>Point fort de la séance :</label>
+    <input type="text" id="strength" placeholder="Ex: Bon service, bonnes sensations en revers…">
+
+    <label>Point faible de la séance :</label>
+    <input type="text" id="weakness" placeholder="Ex: Lancers de balle instables, revers slicé raté…">
+
+    <label>Sentiment global :</label>
+    <textarea id="notes" placeholder="Comment tu t'es sentie aujourd'hui ?"></textarea>
+
+    <button onclick="addSession()">Ajouter</button>
+  </div>
+
+  <!-- Affichage -->
+  <div class="card">
+    <h2>Historique</h2>
+    <div id="history"></div>
+  </div>
+
+  <script>
+    function addSession() {
+      const session = {
+        date: document.getElementById("date").value,
+        confidence: document.getElementById("confidence").value,
+        doubleFaults: document.getElementById("doubleFaults").value,
+        strength: document.getElementById("strength").value,
+        weakness: document.getElementById("weakness").value,
+        notes: document.getElementById("notes").value
+      };
+
+      let data = JSON.parse(localStorage.getItem("sessions")) || [];
+      data.push(session);
+      localStorage.setItem("sessions", JSON.stringify(data));
+
+      displaySessions();
+      alert("Session ajoutée !");
+    }
+
+    function displaySessions() {
+      let data = JSON.parse(localStorage.getItem("sessions")) || [];
+      const container = document.getElementById("history");
+      container.innerHTML = "";
+
+      data.forEach((s) => {
+        container.innerHTML += `
+          <div style="padding:10px; border-bottom:1px solid #ddd;">
+            <strong>${s.date}</strong><br>
+            Confiance : ${s.confidence}/10 <br>
+            Doubles fautes : ${s.doubleFaults}<br>
+            <strong>Point fort :</strong> ${s.strength} <br>
+            <strong>Point faible :</strong> ${s.weakness} <br>
+            <strong>Notes :</strong> ${s.notes}
+          </div>
+        `;
+      });
+    }
+
+    displaySessions();
+  </script>
+</body>
+</html>
